@@ -5,8 +5,9 @@ on:
   # Triggers the workflow on push or pull request closing events for the list of branches
   pull_request:
     branches: 
-      - main 
+      - master
       - develop
+      - main
     types:
       - closed
 
