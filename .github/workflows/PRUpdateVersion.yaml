@@ -46,14 +46,22 @@ jobs:
         # No need to run items to navigate to the root of the repo as the action 
         # assumes it is there
 
-      # Runs a single command using the runner's shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      #@todo there should be a way to determine if the major version needs to be incremented or if it is a spotfix release
+      - name: Run script for master branch
+        if: github.base_ref == 'master' || github.base_ref == 'main' 
+        run: |
+          python updateFileName.py "configtest.h"
+
+      - name: Run script for develop branch
+        if: github.base_ref == 'develop'
+        run: |
+          python updateFileName.py "configtest.h" --minorV=0
 
       # Run the script to edit a mock update file name
       - name: Run the script to edit a mock update file name
         run: |
-          python updateFileName.py "configtest.h"
+          OUTPUT=$(python updateFileName.py "configtest.h")
+          echo "OUTPUT=$OUTPUT" >> $GITHUB_ENV
 
       # Commit and push changes
       - name: Commit and push changes
@@ -61,5 +69,5 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add configtest.h  # Adjust the path to the file being updated
-          git commit -m "Update version to $(date +'%Y.%m.%d.%H%M%S')"
+          git commit -m "Update version to $OUTPUT')"
           git push origin ${{ github.ref }}
