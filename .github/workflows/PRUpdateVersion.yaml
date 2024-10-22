@@ -10,8 +10,7 @@ on:
       - main
     types:
       - closed
-  env:
-    ACTIONS_STEP_DEBUG: true
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
