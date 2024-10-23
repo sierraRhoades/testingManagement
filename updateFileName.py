@@ -61,6 +61,7 @@ def main(fileName, major_version, minor_version, verbose):
 
     # regex generation for other pieces of version
     major_regex = f"    #define FW_MAJOR_VERSION (%d)\n"
+    minor_regex = f"    #define FW_MINOR_VERSION (%d)\n"
     revision_regx = f"    #define FW_REVISION_VERSION (%d)\n"
     # Specify the file path
     temp_file_path = fileName + ".tmp"
@@ -81,7 +82,7 @@ def main(fileName, major_version, minor_version, verbose):
                 if minor_version is None:
                     minor_version = rev_number = int(line.split("(")[1].split(")")[0])
                 else:
-                    line = major_regex % minor_version
+                    line = minor_regex % minor_version
             elif "#define FW_VERSION_VERSION" in line:
                 if version_num_str in line:
                     # same date time need to flag updating the revision number
@@ -93,7 +94,7 @@ def main(fileName, major_version, minor_version, verbose):
                     rev_number = int(line.split("(")[1].split(")")[0])+1
                 line = revision_regx % rev_number
             temp_file.write(line)
-
+            
     # Replace the original file with the temporary file
     os.replace(temp_file_path, fileName)
 
